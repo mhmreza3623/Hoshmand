@@ -1,0 +1,17 @@
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\bin\Debug\net6.0\Hoshmand.Infrastructure.deps.json
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\bin\Debug\net6.0\Hoshmand.Infrastructure.dll
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\bin\Debug\net6.0\Hoshmand.Infrastructure.pdb
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\obj\Debug\net6.0\Hoshmand.Infrastructure.csproj.AssemblyReference.cache
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\obj\Debug\net6.0\Hoshmand.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\obj\Debug\net6.0\Hoshmand.Infrastructure.AssemblyInfoInputs.cache
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\obj\Debug\net6.0\Hoshmand.Infrastructure.AssemblyInfo.cs
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\obj\Debug\net6.0\Hoshmand.Infrastructure.csproj.CoreCompileInputs.cache
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\obj\Debug\net6.0\Hoshmand.Infrastructure.dll
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\obj\Debug\net6.0\refint\Hoshmand.Infrastructure.dll
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\obj\Debug\net6.0\Hoshmand.Infrastructure.pdb
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\obj\Debug\net6.0\ref\Hoshmand.Infrastructure.dll
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\bin\Debug\net6.0\Hoshmand.Infrastructure.runtimeconfig.json
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\bin\Debug\net6.0\Hoshmand.Core.dll
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\bin\Debug\net6.0\Hoshmand.Core.pdb
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\obj\Debug\net6.0\Hoshmand.Infrastructure.csproj.CopyComplete
+G:\Sources\HoshmandAuthService\Hoshmand.Infrastructure\obj\Debug\net6.0\Hoshmand.Infrastructure.genruntimeconfig.cache

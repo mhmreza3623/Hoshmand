@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "6ELJr0EOGtCz0KYR/dMe5mDGF3gzMs8g/q0F+Zly7KD5p6FsBJYa5EZa1a/Ecov2+jQydUG2jJNuZ+Bm0rNRjw==",
+  "success": true,
+  "projectFilePath": "G:\\Sources\\HoshmandAuthService\\Hoshmand.Core\\Hoshmand.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\SMT\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
+    "C:\\Users\\SMT\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\SMT\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
+    "C:\\Users\\SMT\\.nuget\\packages\\system.io.pipelines\\5.0.2\\system.io.pipelines.5.0.2.nupkg.sha512",
+    "C:\\Users\\SMT\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
