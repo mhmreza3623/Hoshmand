@@ -7,7 +7,7 @@ namespace Hoshmand.Infrastructure.AppSettings
     {
         public ServiceSettings(IConfiguration configuration)
         {
-            HoshmandOrderBaseAddress = configuration.GetSection("ServiceApiAddress:")["HoshmandOrderBaseAddress"];
+            HoshmandOrderBaseAddress = configuration.GetSection("ServiceApiAddress")["HoshmandOrderBaseAddress"];
             HoshmandIdCardBaseAddress = configuration.GetSection("ServiceApiAddress")["HoshmandIdCardBaseAddress"];
         }
 

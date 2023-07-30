@@ -9,6 +9,6 @@ namespace Hoshmand.Core.Dto.Requests
 {
     public class OrderRequestDto
     {
-        public string OrderId { get; set; }
+        public string orderId { get; set; }
     }
 }

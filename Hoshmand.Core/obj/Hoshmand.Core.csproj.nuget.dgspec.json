@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "G:\\Sources\\HoshmandAuthService\\Hoshmand.Core\\Hoshmand.Core.csproj": {}
+    "F:\\Projects\\Hoshmand\\Hoshmand.Core\\Hoshmand.Core.csproj": {}
   },
   "projects": {
-    "G:\\Sources\\HoshmandAuthService\\Hoshmand.Core\\Hoshmand.Core.csproj": {
+    "F:\\Projects\\Hoshmand\\Hoshmand.Core\\Hoshmand.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\Sources\\HoshmandAuthService\\Hoshmand.Core\\Hoshmand.Core.csproj",
+        "projectUniqueName": "F:\\Projects\\Hoshmand\\Hoshmand.Core\\Hoshmand.Core.csproj",
         "projectName": "Hoshmand.Core",
-        "projectPath": "G:\\Sources\\HoshmandAuthService\\Hoshmand.Core\\Hoshmand.Core.csproj",
-        "packagesPath": "C:\\Users\\SMT\\.nuget\\packages\\",
-        "outputPath": "G:\\Sources\\HoshmandAuthService\\Hoshmand.Core\\obj\\",
+        "projectPath": "F:\\Projects\\Hoshmand\\Hoshmand.Core\\Hoshmand.Core.csproj",
+        "packagesPath": "C:\\Users\\mramezani.RAYANMEHR\\.nuget\\packages\\",
+        "outputPath": "F:\\Projects\\Hoshmand\\Hoshmand.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\SMT\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mramezani.RAYANMEHR\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

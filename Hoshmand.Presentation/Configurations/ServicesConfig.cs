@@ -1,4 +1,4 @@
-﻿using Hoshmand.Application.ApplicationServices;
+﻿using Hoshmand.Application.Services;
 using Hoshmand.Core.Interfaces.ApplicationServices;
 using Hoshmand.Core.Interfaces.ExternalServices;
 using Hoshmand.Core.Interfaces.SettingServices;
@@ -8,7 +8,7 @@ using Hoshmand.Infrastructure.Repositories;
 
 namespace Hoshmand.Presentation.ServiceCollections
 {
-    public static class TransientConfig
+    public static class ServicesConfig
     {
         public static IServiceCollection AddTransientConfig(this IServiceCollection services, IConfiguration configuration)
         {

@@ -2,7 +2,7 @@
 {
     public class NumPhoneRequestDto
     {
-        public string Number { get; set; }
-        public string Phone { get; set; }
+        public string number { get; set; }
+        public string phone { get; set; }
     }
 }

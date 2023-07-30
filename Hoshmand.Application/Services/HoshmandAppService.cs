@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System.Text;
 using System.Text.Json;
 
-namespace Hoshmand.Application.ApplicationServices;
+namespace Hoshmand.Application.Services;
 public class HoshmandAppService : IHoshmandAppService
 {
     private readonly IHoshmandClientProxy _hoshmandServiceProxy;
@@ -27,10 +27,10 @@ public class HoshmandAppService : IHoshmandAppService
         )
     {
         _hoshmandServiceProxy = hoshmandServiceProxy;
-        this._serviceSettings = serviceSettings;
-        this._orderRepo = orderRepo;
-        this._numPhoneRepo = numPhoneRepo;
-        this._checkCodeRepo = checkCodeRepo;
+        _serviceSettings = serviceSettings;
+        _orderRepo = orderRepo;
+        _numPhoneRepo = numPhoneRepo;
+        _checkCodeRepo = checkCodeRepo;
     }
 
     public async Task<string> Authentication(IFormFile idCardLink, IFormFile idCardLink2, string mobile, string nationalCode)
@@ -47,7 +47,7 @@ public class HoshmandAppService : IHoshmandAppService
 
         if (checkCodeResponse)
         {
-            return await IdCard(orderRequst.Id, orderRequst.OrderId, idCardLink, idCardLink2);
+            await IdCard(orderRequst.Id, orderRequst.OrderId, idCardLink, idCardLink2);
         }
 
         return string.Empty;
@@ -64,10 +64,10 @@ public class HoshmandAppService : IHoshmandAppService
 
 
         var orderResponse = await _hoshmandServiceProxy
-            .SendAsync<OrderRequestDto, HoshmandOrderResponseDto>(
+            .SendAsync(
             HttpMethod.Post,
             "/GetOrderId2/",
-            new OrderRequestDto { OrderId = order.OrderId },
+            new OrderRequestDto { orderId = order.OrderId },
            orderServiceCallback,
             string.Empty);
 
@@ -92,10 +92,10 @@ public class HoshmandAppService : IHoshmandAppService
 
 
         var numphoneResponse = await _hoshmandServiceProxy
-            .SendAsync<NumPhoneRequestDto, HoshmandResponseDto>(
-            HttpMethod.Post,
+            .SendAsync(
+            HttpMethod.Put,
             $"/PostIdNumPhone2/{orderId}",
-            new NumPhoneRequestDto { Phone = mobile, Number = natinalCode },
+            new NumPhoneRequestDto { phone = mobile, number = natinalCode },
            NumPhoneServiceCallback,
             string.Empty);
 
@@ -118,12 +118,11 @@ public class HoshmandAppService : IHoshmandAppService
             OrderRequestId = orderRequestId
         });
 
-
         var checkCodeResponse = await _hoshmandServiceProxy
             .SendAsync<CheckCodeRequestDto, HoshmandOrderResponseDto>(
-            HttpMethod.Post,
+            HttpMethod.Put,
             $"/checkCode2/{orderId}",
-            new CheckCodeRequestDto { MessageCode = messageCodeOutput },
+            new CheckCodeRequestDto { messageCode = messageCodeOutput },
            CheckCodeServiceCallback,
             string.Empty);
 
@@ -135,13 +134,12 @@ public class HoshmandAppService : IHoshmandAppService
         return false;
     }
 
-    private async Task<string> IdCard(int orderRequestId, string orderId, IFormFile idCardLink, IFormFile idCardLink2)
+    private async Task IdCard(int orderRequestId, string orderId, IFormFile idCardLink, IFormFile idCardLink2)
     {
-        var action = _serviceSettings.HoshmandIdCardBaseAddress + $"/idCard2/{orderId}";
-        var template = GetResponseTemplate();
-        var form = GenerateForm(action, idCardLink, idCardLink2);
+        var idCard1 = new StreamContent(idCardLink.OpenReadStream());
+        var idCard2 = new StreamContent(idCardLink2.OpenReadStream());
+        var response = await _hoshmandServiceProxy.SendFile(orderId, idCard1, idCard2);
 
-        return form;
     }
 
 
@@ -168,25 +166,5 @@ public class HoshmandAppService : IHoshmandAppService
         });
     }
 
-
-    //template parser
-    private string GetResponseTemplate()
-    {
-        string result;
-        using (StreamReader sr = new(@"html\idCard.html"))
-        {
-            // Read the stream to a string, and write the string to the console.
-            result = sr.ReadToEndAsync().Result;
-        }
-
-        return result;
-    }
-    private string GenerateForm(string action, IFormFile idCardLink, IFormFile idCardLink2)
-    {
-        var result = new StringBuilder($"<form name=\"idCardFrom\" method=\"post\" action=\"{action}\" target=\"_top\" >\n");
-        result.Append($"<input id=\"idCardLink\" type=\"file\" value=\"{idCardLink}\" />\n");
-        result.Append($"<input id=\"idCardLink2\" type=\"file\" value=\"{idCardLink2}\" />\n");
-        return result.ToString();
-    }
 }
 

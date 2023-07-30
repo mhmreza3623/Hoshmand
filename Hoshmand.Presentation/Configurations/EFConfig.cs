@@ -11,7 +11,7 @@ namespace Hoshmand.Presentation.Configurations
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(cfg => configuration.GetConnectionString("DefaultCollection"));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddScoped(typeof(IGeneralRepository<>), typeof(GeneralRepository<>));
