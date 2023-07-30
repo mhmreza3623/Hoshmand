@@ -3,6 +3,5 @@
     public class OrderRequestEntity : BaseEntity
     {
         public string OrderId { get; set; }
-        
     }
 }

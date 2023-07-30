@@ -8,6 +8,7 @@ namespace Hoshmand.Core.Interfaces.Repositories
         T Add(T entity);
         IQueryable<T> Get(Expression<Func<T, bool>> expression);
         IEnumerable<T> GetAll();
+        void Udate(T entity);
     }
 }
 

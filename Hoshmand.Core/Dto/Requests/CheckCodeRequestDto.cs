@@ -2,6 +2,6 @@
 {
     public class CheckCodeRequestDto
     {
-        public string messageCode { get; set; }
+        public string messageCodeInput { get; set; }
     }
 }

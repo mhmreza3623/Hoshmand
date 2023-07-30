@@ -1,4 +1,5 @@
-﻿using Hoshmand.Core.Interfaces.ExternalServices;
+﻿using Hoshmand.Core.Dto.Requests;
+using Hoshmand.Core.Interfaces.ExternalServices;
 using Hoshmand.Core.Interfaces.SettingServices;
 using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
@@ -29,10 +30,9 @@ namespace Hoshmand.Infrastructure.ExternalServices
             return httpClient;
         }
 
-
-        public async Task<K> SendAsync<T, K>(HttpMethod httpMethod, string serviceUrl, T input, Func<object, K> resultAction, string queryString)
-            where T : class
-            where K : class
+        public async Task<TResult> SendJsonRequestAsync<TInput, TResult>(HttpMethod httpMethod, string serviceUrl, TInput input, Func<object, TResult> resultAction, string queryString)
+            where TInput : class
+            where TResult : class
         {
             var httpClient = GetClient(_serviceSettings.HoshmandOrderBaseAddress);
             HttpResponseMessage response = new HttpResponseMessage();
@@ -61,27 +61,46 @@ namespace Hoshmand.Infrastructure.ExternalServices
             return null;
         }
 
-        public async Task<HttpResponseMessage> SendFile(string orderId, StreamContent idCard1, StreamContent idCard2)
+        public async Task<TResult> SendFormDataRequestAsync<TResult>(HttpMethod httpMethod, string serviceUrl, List<FormDataRequestDto> files, Func<object, TResult> resultAction)
+            where TResult : class
         {
-            var client = GetClient(_serviceSettings.HoshmandIdCardBaseAddress);
+            var httpClient = GetClient(_serviceSettings.HoshmandIdCardBaseAddress);
+
+
+            HttpResponseMessage response = new HttpResponseMessage();
 
 
             using (var multipartFormContent = new MultipartFormDataContent())
             {
-                //Load the file and set the file's Content-Type header
-                idCard1.Headers.ContentType = new MediaTypeHeaderValue("image/png");
-                idCard2.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                foreach (var file in files)
+                {
+                    file.ContentStream.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                    multipartFormContent.Add(file.ContentStream, name: file.FormFieldName, fileName: file.FileName);
+                }
 
-                //Add the file
-                multipartFormContent.Add(idCard1, name: "file", fileName: "house.png");
-                multipartFormContent.Add(idCard2, name: "file", fileName: "house.png");
+                switch (httpMethod.Method.ToLower())
+                {
+                    case "post":
+                        response = await httpClient.PostAsync(serviceUrl, multipartFormContent);
+                        response.EnsureSuccessStatusCode();
+                        break;
+                    case "put":
+                        response = await httpClient.PutAsync(serviceUrl, multipartFormContent);
+                        response.EnsureSuccessStatusCode();
 
-                //Send it
-                var response = await client.PostAsync($"/idCard2/{orderId}", multipartFormContent);
-                response.EnsureSuccessStatusCode();
+                        break;
+                    default:
+                        throw new Exception("Invalid http method");
+                }
 
-                return response;
+                if (response.IsSuccessStatusCode)
+                {
+                    return resultAction(response);
+                }
+
+                return null;
             }
         }
+
     }
 }

@@ -64,7 +64,7 @@ public class HoshmandAppService : IHoshmandAppService
 
 
         var orderResponse = await _hoshmandServiceProxy
-            .SendAsync(
+            .SendJsonRequestAsync(
             HttpMethod.Post,
             "/GetOrderId2/",
             new OrderRequestDto { orderId = order.OrderId },
@@ -92,10 +92,10 @@ public class HoshmandAppService : IHoshmandAppService
 
 
         var numphoneResponse = await _hoshmandServiceProxy
-            .SendAsync(
+            .SendJsonRequestAsync(
             HttpMethod.Put,
             $"/PostIdNumPhone2/{orderId}",
-            new NumPhoneRequestDto { phone = mobile, number = natinalCode },
+            new NumPhoneRequestDto { phone = mobile, idNum = natinalCode },
            NumPhoneServiceCallback,
             string.Empty);
 
@@ -119,10 +119,10 @@ public class HoshmandAppService : IHoshmandAppService
         });
 
         var checkCodeResponse = await _hoshmandServiceProxy
-            .SendAsync<CheckCodeRequestDto, HoshmandOrderResponseDto>(
+            .SendJsonRequestAsync<CheckCodeRequestDto, HoshmandOrderResponseDto>(
             HttpMethod.Put,
             $"/checkCode2/{orderId}",
-            new CheckCodeRequestDto { messageCode = messageCodeOutput },
+            new CheckCodeRequestDto { messageCodeInput = messageCodeOutput },
            CheckCodeServiceCallback,
             string.Empty);
 
@@ -134,14 +134,53 @@ public class HoshmandAppService : IHoshmandAppService
         return false;
     }
 
-    private async Task IdCard(int orderRequestId, string orderId, IFormFile idCardLink, IFormFile idCardLink2)
+    private async Task<IdCardRequestDto> IdCard(int orderRequestId, string orderId, IFormFile idCardLink, IFormFile idCardLink2)
     {
         var idCard1 = new StreamContent(idCardLink.OpenReadStream());
         var idCard2 = new StreamContent(idCardLink2.OpenReadStream());
-        var response = await _hoshmandServiceProxy.SendFile(orderId, idCard1, idCard2);
+
+        var request = new List<FormDataRequestDto>() {
+                    new FormDataRequestDto {
+                        FileName = idCardLink.FileName,
+                        ContentStream = idCard1,
+                        FormFieldName = "idCardLink",
+                        ContentType = idCardLink.ContentType },
+
+        new FormDataRequestDto {
+                        FileName = idCardLink2.FileName,
+                        ContentStream = idCard2,
+                        FormFieldName = "idCardLink2",
+                        ContentType = idCardLink2.ContentType }
+        };
+
+        var response = await _hoshmandServiceProxy.SendFormDataRequestAsync<IdCardRequestDto>(HttpMethod.Put, $"/idCard2/{orderId}", request, IdCardCallBack);
+
+        return response;
 
     }
 
+    private async Task CompareIdcardFace2(int orderRequestId, string orderId, IFormFile faceImage, IFormFile video)
+    {
+        var faceImageContent = new StreamContent(faceImage.OpenReadStream());
+        var videoContent = new StreamContent(video.OpenReadStream());
+
+        var request = new List<FormDataRequestDto>() {
+                    new FormDataRequestDto {
+                        FileName = faceImage.FileName,
+                        ContentStream = faceImageContent,
+                        FormFieldName = "faceImageLink",
+                        ContentType = faceImage.ContentType },
+
+        new FormDataRequestDto {
+                        FileName = video.FileName,
+                        ContentStream = videoContent,
+                        FormFieldName = "videoLink",
+                        ContentType = video.ContentType }
+        };
+
+        var response = await _hoshmandServiceProxy.SendFormDataRequestAsync<IdCardRequestDto>(HttpMethod.Put, $"/CompareIdcardFace2/{orderId}", request, IdCardCallBack);
+
+    }
 
     //service CallBacks
     private HoshmandOrderResponseDto orderServiceCallback(object arg)
@@ -161,6 +200,13 @@ public class HoshmandAppService : IHoshmandAppService
     private HoshmandResponseDto CheckCodeServiceCallback(object arg)
     {
         return JsonSerializer.Deserialize<HoshmandResponseDto>(((HttpResponseMessage)arg).Content.ReadAsStreamAsync().Result, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        });
+    }
+    private IdCardRequestDto IdCardCallBack(object arg)
+    {
+        return JsonSerializer.Deserialize<IdCardRequestDto>(((HttpResponseMessage)arg).Content.ReadAsStreamAsync().Result, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
         });

@@ -9,5 +9,8 @@ namespace Hoshmand.Core.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public DateTime CreateDate { get; set; }
+
+        public string RawResponse { get; set; }
+        public DateTime ResponsDate { get; set; }
     }
 }

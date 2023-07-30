@@ -2,6 +2,7 @@
 using Hoshmand.Core.Interfaces.Repositories;
 using Hoshmand.Infrastructure.DataBase;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Hoshmand.Infrastructure.Repositories
@@ -32,6 +33,14 @@ namespace Hoshmand.Infrastructure.Repositories
         public IEnumerable<T> GetAll()
         {
             return _dbSet.ToList();
+        }
+
+        public void Udate(T entity)
+        {
+            _dbSet.Attach(entity);
+            var entry = context.Entry(entity);
+            entry.State = EntityState.Modified;
+            context.SaveChanges();
         }
     }
 }

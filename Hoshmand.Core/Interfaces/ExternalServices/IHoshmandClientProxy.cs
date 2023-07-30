@@ -1,10 +1,10 @@
-﻿namespace Hoshmand.Core.Interfaces.ExternalServices
+﻿using Hoshmand.Core.Dto.Requests;
+
+namespace Hoshmand.Core.Interfaces.ExternalServices
 {
     public interface IHoshmandClientProxy
     {
-        Task<K> SendAsync<T, K>(HttpMethod httpMethod, string serviceUrl, T input, Func<object, K> resultAction, string queryString)
-            where T :class  
-            where K : class;
-        Task<HttpResponseMessage> SendFile(string orderId, StreamContent idCard1, StreamContent idCard2);
+        Task<TResult> SendJsonRequestAsync<TInput, TResult>(HttpMethod httpMethod, string serviceUrl, TInput input, Func<object, TResult> resultAction, string queryString) where TInput : class where TResult : class;
+        Task<TResult> SendFormDataRequestAsync<TResult>(HttpMethod httpMethod, string serviceUrl, List<FormDataRequestDto> files, Func<object, TResult> resultAction) where TResult : class;
     }
 }

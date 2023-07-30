@@ -4,9 +4,8 @@
     {
         public int OrderRequestId { get; set; }
         public OrderRequestEntity OrderRequest { get; set; }
-
         public string MessageCodeInput { get; set; }
 
-
+       
     }
 }
