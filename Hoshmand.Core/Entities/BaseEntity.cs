@@ -10,7 +10,7 @@ namespace Hoshmand.Core.Entities
         public int Id { get; set; }
         public DateTime CreateDate { get; set; }
 
-        public string RawResponse { get; set; }
-        public DateTime ResponsDate { get; set; }
+        public string? RawResponse { get; set; }
+        public DateTime? ResponsDate { get; set; }
     }
 }

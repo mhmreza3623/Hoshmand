@@ -2,6 +2,7 @@
 {
     public class HoshmandIdCardResponseDto : HoshmandResponseDto
     {
+        public string MessageCodeInput { get; set; }
         public object IdCardLink { get; set; }
         public object IdCardLink2 { get; set; }
         public string IdCardBirthDate { get; set; }

@@ -22,4 +22,12 @@ public class HoshmandAuthController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("idard")]
+    public async Task<IActionResult> IdCard(IFormFile IdCard1, IFormFile IdCard2)
+    {
+        var result = await _hoshmandAppService.IdCard(1,"2", IdCard1, IdCard2);
+
+        return Ok(result);
+    }
 }
