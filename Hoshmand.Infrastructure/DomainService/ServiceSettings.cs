@@ -1,7 +1,7 @@
-﻿using Hoshmand.Core.Interfaces.SettingServices;
+﻿using Hoshmand.Core.Interfaces.DomainServices;
 using Microsoft.Extensions.Configuration;
 
-namespace Hoshmand.Infrastructure.AppSettings
+namespace Hoshmand.Infrastructure.DomainService
 {
     public class ServiceSettings : IServiceSettings
     {

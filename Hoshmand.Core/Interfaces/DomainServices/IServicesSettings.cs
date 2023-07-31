@@ -1,4 +1,4 @@
-﻿namespace Hoshmand.Core.Interfaces.SettingServices
+﻿namespace Hoshmand.Core.Interfaces.DomainServices
 {
     public interface IServiceSettings
     {
