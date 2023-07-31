@@ -1,6 +1,6 @@
-﻿using Hoshmand.Core.Interfaces.ApplicationServices;
-using Hoshmand.Core.Interfaces.SettingServices;
-using Hoshmand.Presentation.Models;
+﻿using FluentValidation;
+using Hoshmand.Core.Dto.Requests;
+using Hoshmand.Core.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hoshmand.Presentation.Controllers;
@@ -9,18 +9,25 @@ namespace Hoshmand.Presentation.Controllers;
 public class HoshmandAuthController : ControllerBase
 {
     private readonly IHoshmandAppService _hoshmandAppService;
+    private readonly IValidator<AuthenticatonRequestModel> _validator;
 
-    public HoshmandAuthController(IHoshmandAppService hoshmandAppService)
+    public HoshmandAuthController(IHoshmandAppService hoshmandAppService, IValidator<AuthenticatonRequestModel> validator)
     {
         this._hoshmandAppService = hoshmandAppService;
+        this._validator = validator;
     }
 
     [HttpPost("Auth")]
-    public async Task<IActionResult> AuthenticationByIdCardImages(IFormFile imgIdCardFront, IFormFile imgIdCardBehind, IFormFile faceImage, IFormFile liveVideo, string mobile, string nationalCode)
+    public async Task<IActionResult> Authentication([FromForm] AuthenticatonRequestModel requestModel)
     {
-        var result = await _hoshmandAppService.Authentication(imgIdCardFront, imgIdCardBehind, faceImage, liveVideo, mobile, nationalCode);
+        var validation = await _validator.ValidateAsync(requestModel);
+        if (validation.IsValid)
+        {
+            var result = await _hoshmandAppService.Authentication(requestModel);
 
-        return Ok(result);
+            return Ok(result);
+        }
+        return BadRequest();
     }
 
 }

@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "F6RRxSNkhy2r4WeelOPo+A4jC2CjGCTDRly010QRkg8XYeECngtudalIcZQNzpjx8ydQfOYpM832DDVB2Y8HuA==",
+  "dgSpecHash": "f7IIfeH5iRnPUGX0Tt+eH+VBuplMtn4h7DXMzvN8NGAfm11MuZq74xtRI6uWxR7muUdBbU3upWuL2Wm26NATHQ==",
   "success": true,
   "projectFilePath": "F:\\Projects\\Hoshmand\\Hoshmand.Application\\Hoshmand.Application.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\mramezani.RAYANMEHR\\.nuget\\packages\\fluentvalidation\\11.6.0\\fluentvalidation.11.6.0.nupkg.sha512",
     "C:\\Users\\mramezani.RAYANMEHR\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\mramezani.RAYANMEHR\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\mramezani.RAYANMEHR\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",

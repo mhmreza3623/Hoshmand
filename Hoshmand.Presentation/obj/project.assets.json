@@ -1290,6 +1290,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
+          "FluentValidation": "11.6.0",
           "Hoshmand.Core": "1.0.0",
           "Microsoft.AspNetCore.Http.Features": "5.0.17"
         },

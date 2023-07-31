@@ -7,15 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Hoshmand.Core\Hoshmand.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="PipeLines\Hoshmand\" />
   </ItemGroup>
 
 </Project>

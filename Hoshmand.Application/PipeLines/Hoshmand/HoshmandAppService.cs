@@ -1,4 +1,5 @@
-﻿using Hoshmand.Core.Common;
+﻿using FluentValidation;
+using Hoshmand.Core.Common;
 using Hoshmand.Core.Dto.Requests;
 using Hoshmand.Core.Dto.Response;
 using Hoshmand.Core.Entities;
@@ -7,11 +8,13 @@ using Hoshmand.Core.Interfaces.ExternalServices;
 using Hoshmand.Core.Interfaces.Repositories;
 using Hoshmand.Core.Interfaces.SettingServices;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 
-namespace Hoshmand.Application.Services;
+namespace Hoshmand.Application.PipeLines.Hoshmand;
 public class HoshmandAppService : IHoshmandAppService
 {
     private readonly IHoshmandClientProxy _hoshmandServiceProxy;
@@ -20,6 +23,7 @@ public class HoshmandAppService : IHoshmandAppService
     private readonly IGeneralRepository<NumPhoneRequestEntity> _numPhoneRepo;
     private readonly IGeneralRepository<CheckCodeRequestEntity> _checkCodeRepo;
     private readonly IGeneralRepository<IdCardRequestEntity> _idCardRepo;
+    private readonly IValidator<AuthenticatonRequestModel> _validator;
 
     public HoshmandAppService(
         IHoshmandClientProxy hoshmandServiceProxy,
@@ -27,7 +31,8 @@ public class HoshmandAppService : IHoshmandAppService
         IGeneralRepository<OrderRequestEntity> orderRepo,
         IGeneralRepository<NumPhoneRequestEntity> numPhoneRepo,
         IGeneralRepository<CheckCodeRequestEntity> checkCodeRepo,
-        IGeneralRepository<IdCardRequestEntity> idCardRepo
+        IGeneralRepository<IdCardRequestEntity> idCardRepo,
+        IValidator<AuthenticatonRequestModel> validator
         )
     {
         _hoshmandServiceProxy = hoshmandServiceProxy;
@@ -35,47 +40,47 @@ public class HoshmandAppService : IHoshmandAppService
         _orderRepo = orderRepo;
         _numPhoneRepo = numPhoneRepo;
         _checkCodeRepo = checkCodeRepo;
-        this._idCardRepo = idCardRepo;
+        _idCardRepo = idCardRepo;
+        this._validator = validator;
     }
 
-    public async Task<bool> Authentication(IFormFile imgIdCardFront, IFormFile imgIdCardBehind, IFormFile faceImage, IFormFile liveVedio, string mobile, string nationalCode)
+    public async Task<bool> Authentication(AuthenticatonRequestModel requestModel)
     {
-
-        var messageOutput = string.Empty;
-        var checkCodeResponse = false;
+        HoshmandResponseDto response = null;
+        HoshmandResponseDto CheckNumPhoneResponse = null;
+        HoshmandResponseDto CheckCodeResponse = null;
         HoshmandIdCardResponseDto? idCardRespone = null;
-        var isCompelete = false;
+        CompareFaceResponseDto compareIdcardFaceResponse = null;
 
         var orderRequst = await GetOrder();
 
         if (orderRequst != null)
         {
-            messageOutput = await CheckNumPhone(mobile, nationalCode, orderRequst.Id, orderRequst.OrderId);
+            CheckNumPhoneResponse = await CheckNumPhone(requestModel.Mobile, requestModel.NationalCode, orderRequst.Id, orderRequst.OrderId);
         }
 
-        if (!string.IsNullOrEmpty(messageOutput))
+        if (CheckNumPhoneResponse != null)
         {
-            checkCodeResponse = await CheckCode(orderRequst.Id, orderRequst.OrderId, messageOutput);
+            CheckCodeResponse = await CheckCode(orderRequst.Id, orderRequst.OrderId, CheckNumPhoneResponse.MessageCodeOutput);
         }
 
-        if (checkCodeResponse)
+        if (CheckCodeResponse != null)
         {
-            idCardRespone = await IdCard(orderRequst.Id, orderRequst.OrderId, imgIdCardFront, imgIdCardBehind);
+            idCardRespone = await IdCard(orderRequst.Id, orderRequst.OrderId, requestModel.IdCardFrontImage, requestModel.IdCardBehindImage);
         }
 
         if (idCardRespone != null)
         {
-            isCompelete = await CompareIdcardFace2(orderRequst.Id, orderRequst.OrderId, faceImage, liveVedio);
+            compareIdcardFaceResponse = await CompareIdcardFace2(orderRequst.Id, orderRequst.OrderId, requestModel.SelfiImage, requestModel.liveVideo);
 
-            if (isCompelete)
+            if (compareIdcardFaceResponse != null)
             {
                 //
             }
         }
 
-        return isCompelete;
+        return true;
     }
-
 
     //Hoshmand services
     private async Task<OrderRequestEntity> GetOrder()
@@ -91,7 +96,7 @@ public class HoshmandAppService : IHoshmandAppService
             HttpMethod.Post,
             "/GetOrderId2/",
             new OrderRequestDto { orderId = order.OrderId },
-           orderServiceCallback,
+           CallbackHandler<HoshmandOrderResponseDto>,
             string.Empty);
 
         UpdateResponse(_orderRepo, order, response);
@@ -105,7 +110,7 @@ public class HoshmandAppService : IHoshmandAppService
 
     }
 
-    private async Task<string> CheckNumPhone(string mobile, string natinalCode, int orderRequestId, string orderId)
+    private async Task<HoshmandResponseDto> CheckNumPhone(string mobile, string natinalCode, int orderRequestId, string orderId)
     {
         var numPhoneRequest = _numPhoneRepo.Add(new NumPhoneRequestEntity
         {
@@ -120,7 +125,7 @@ public class HoshmandAppService : IHoshmandAppService
             HttpMethod.Put,
             $"/PostIdNumPhone2/{orderId}",
             new NumPhoneRequestDto { phone = mobile, idNum = natinalCode },
-           NumPhoneServiceCallback,
+                      CallbackHandler<HoshmandResponseDto>,
             string.Empty);
 
         UpdateResponse(_numPhoneRepo, numPhoneRequest, response);
@@ -128,15 +133,15 @@ public class HoshmandAppService : IHoshmandAppService
         if (response != null &&
             !string.IsNullOrWhiteSpace(response.RejectMessage))
         {
-            return response.MessageCodeOutput;
+            return response;
 
         }
 
-        return string.Empty;
+        return null;
 
     }
 
-    private async Task<bool> CheckCode(int orderRequestId, string orderId, string messageCodeOutput)
+    private async Task<HoshmandResponseDto> CheckCode(int orderRequestId, string orderId, string messageCodeOutput)
     {
         var checkCodeRequest = _checkCodeRepo.Add(new CheckCodeRequestEntity
         {
@@ -145,22 +150,21 @@ public class HoshmandAppService : IHoshmandAppService
         });
 
         var response = await _hoshmandServiceProxy
-            .SendJsonRequestAsync<CheckCodeRequestDto, HoshmandOrderResponseDto>(
+            .SendJsonRequestAsync<CheckCodeRequestDto, HoshmandResponseDto>(
             HttpMethod.Put,
             $"/CheckCode2/{orderId}/",
             new CheckCodeRequestDto { messageCodeInput = messageCodeOutput },
-           CheckCodeServiceCallback,
+            CallbackHandler<HoshmandResponseDto>,
             string.Empty);
 
         UpdateResponse(_checkCodeRepo, checkCodeRequest, response);
 
-
         if (response != null && response.Status.ToLower() == "inprogress")
         {
-            return true;
+            return response;
         }
 
-        return false;
+        return null;
     }
 
     private async Task<HoshmandIdCardResponseDto> IdCard(int orderRequestId, string orderId, IFormFile idCardLink, IFormFile idCardLink2)
@@ -191,7 +195,11 @@ public class HoshmandAppService : IHoshmandAppService
                         ContentType = idCardLink2.ContentType }
         };
 
-        var response = await _hoshmandServiceProxy.SendFormDataRequestAsync<HoshmandIdCardResponseDto>(HttpMethod.Put, $"/IDCard2/{orderId}", request, IdCardCallBack);
+        var response = await _hoshmandServiceProxy.SendFormDataRequestAsync(
+            HttpMethod.Put,
+            $"/IDCard2/{orderId}",
+            request,
+            CallbackHandler<HoshmandIdCardResponseDto>);
 
         UpdateResponse(_idCardRepo, idCard, response);
 
@@ -204,7 +212,7 @@ public class HoshmandAppService : IHoshmandAppService
 
     }
 
-    private async Task<bool> CompareIdcardFace2(int orderRequestId, string orderId, IFormFile faceImage, IFormFile video)
+    private async Task<CompareFaceResponseDto> CompareIdcardFace2(int orderRequestId, string orderId, IFormFile faceImage, IFormFile video)
     {
         var faceImageContent = new StreamContent(faceImage.OpenReadStream());
         var videoContent = new StreamContent(video.OpenReadStream());
@@ -223,53 +231,29 @@ public class HoshmandAppService : IHoshmandAppService
                         ContentType = video.ContentType }
         };
 
-        var response = await _hoshmandServiceProxy.SendFormDataRequestAsync<CompareFaceResponseDto>(HttpMethod.Put, $"/CompareIdcardFace2/{orderId}", request, CompareFaceResponseDtoCallBack);
+        var response = await _hoshmandServiceProxy.SendFormDataRequestAsync(
+            HttpMethod.Put,
+            $"/CompareIdcardFace2/{orderId}",
+            request,
+            CallbackHandler<CompareFaceResponseDto>);
 
 
         if (response != null && response.Status.ToLower() == "approve")
         {
-            return true;
+            return response;
         }
 
-        return false;
+        return null;
     }
 
-    //service CallBacks
-    private HoshmandOrderResponseDto orderServiceCallback(object arg)
+    private TResult CallbackHandler<TResult>(object arg)
     {
-        return JsonSerializer.Deserialize<HoshmandOrderResponseDto>(((HttpResponseMessage)arg).Content.ReadAsStreamAsync().Result, new JsonSerializerOptions
+        return JsonSerializer.Deserialize<TResult>(((HttpResponseMessage)arg).Content.ReadAsStreamAsync().Result, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
         });
     }
-    private HoshmandResponseDto NumPhoneServiceCallback(object arg)
-    {
-        return JsonSerializer.Deserialize<HoshmandResponseDto>(((HttpResponseMessage)arg).Content.ReadAsStreamAsync().Result, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-        });
-    }
-    private HoshmandResponseDto CheckCodeServiceCallback(object arg)
-    {
-        return JsonSerializer.Deserialize<HoshmandResponseDto>(((HttpResponseMessage)arg).Content.ReadAsStreamAsync().Result, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-        });
-    }
-    private HoshmandIdCardResponseDto IdCardCallBack(object arg)
-    {
-        return JsonSerializer.Deserialize<HoshmandIdCardResponseDto>(((HttpResponseMessage)arg).Content.ReadAsStreamAsync().Result, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-        });
-    }
-    private CompareFaceResponseDto CompareFaceResponseDtoCallBack(object arg)
-    {
-        return JsonSerializer.Deserialize<CompareFaceResponseDto>(((HttpResponseMessage)arg).Content.ReadAsStreamAsync().Result, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-        });
-    }
+
     private void UpdateResponse<TInput>(IGeneralRepository<TInput> repository, TInput entity, object response) where TInput : BaseEntity
     {
         entity.RawResponse = JsonSerializer.Serialize(response);
