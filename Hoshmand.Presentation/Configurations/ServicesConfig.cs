@@ -28,6 +28,8 @@ namespace Hoshmand.Presentation.ServiceCollections
 
             services.AddTransient<IHttpClientUtility, HttpClientUtility>();
 
+            services.AddTransient<IHoshmandClientProxy, HoshmandClientProxy>();
+
             services.AddScoped<IValidator<AuthenticatonRequestModel>, AuthenticationValidation>();
 
 

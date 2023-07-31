@@ -27,8 +27,6 @@ namespace Hoshmand.Infrastructure.ExternalServices
 
         public HoshmandClientProxy(
             IHttpClientUtility httpClient,
-            IHoshmandClientProxy hoshmandServiceProxy,
-        IServiceSettings serviceSettings,
         IGeneralRepository<OrderRequestEntity> orderRepo,
         IGeneralRepository<NumPhoneRequestEntity> numPhoneRepo,
         IGeneralRepository<CheckCodeRequestEntity> checkCodeRepo,

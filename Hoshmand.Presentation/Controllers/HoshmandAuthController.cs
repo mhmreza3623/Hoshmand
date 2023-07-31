@@ -2,6 +2,7 @@
 using Hoshmand.Core.Dto.Requests;
 using Hoshmand.Core.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace Hoshmand.Presentation.Controllers;
 
@@ -27,7 +28,7 @@ public class HoshmandAuthController : ControllerBase
 
             return Ok(result);
         }
-        return BadRequest();
+        return BadRequest(JsonSerializer.Serialize(validation.Errors.ToList()));
     }
 
 }
