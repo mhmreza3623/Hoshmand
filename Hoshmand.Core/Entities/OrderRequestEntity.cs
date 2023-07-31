@@ -1,4 +1,6 @@
-﻿namespace Hoshmand.Core.Entities
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Hoshmand.Core.Entities
 {
     public class OrderRequestEntity : BaseEntity
     {

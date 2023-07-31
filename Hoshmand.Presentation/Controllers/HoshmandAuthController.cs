@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
+using Hoshmand.Application.ApplicationServices.Hoshmand;
 using Hoshmand.Core.Dto.Requests;
-using Hoshmand.Core.Interfaces.ApplicationServices;
+using Hoshmand.Core.Pipeline;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -9,13 +10,13 @@ namespace Hoshmand.Presentation.Controllers;
 [ApiController]
 public class HoshmandAuthController : ControllerBase
 {
-    private readonly IHoshmandAppService _hoshmandAppService;
     private readonly IValidator<AuthenticatonRequestModel> _validator;
+    private readonly IPipeline<HoshmandPipelineContext, HoshmandPipelineRequest, HoshmandPipelineResponse> _pipeline;
 
-    public HoshmandAuthController(IHoshmandAppService hoshmandAppService, IValidator<AuthenticatonRequestModel> validator)
+    public HoshmandAuthController(IValidator<AuthenticatonRequestModel> validator, IPipeline<HoshmandPipelineContext, HoshmandPipelineRequest, HoshmandPipelineResponse> pipeline)
     {
-        this._hoshmandAppService = hoshmandAppService;
         this._validator = validator;
+        this._pipeline = pipeline;
     }
 
     [HttpPost("Auth")]
@@ -24,7 +25,15 @@ public class HoshmandAuthController : ControllerBase
         var validation = await _validator.ValidateAsync(requestModel);
         if (validation.IsValid)
         {
-            var result = await _hoshmandAppService.Authentication(requestModel);
+            var result = await _pipeline.ExecuteAsync(new HoshmandPipelineRequest
+            {
+                Mobile = requestModel.Mobile,
+                IdCardBehindImage = requestModel.IdCardBehindImage,
+                IdCardFrontImage = requestModel.IdCardFrontImage,
+                LiveVideo = requestModel.liveVideo,
+                NationalCode = requestModel.NationalCode,
+                SelfiImage = requestModel.SelfiImage
+            });
 
             return Ok(result);
         }

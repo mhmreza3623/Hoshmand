@@ -1,16 +1,14 @@
 ﻿using FluentValidation;
-using Hoshmand.Application.PipeLines.Hoshmand;
+using Hoshmand.Application.ApplicationServices.Hoshmand;
 using Hoshmand.Core.Dto.Requests;
-using Hoshmand.Core.Interfaces.ApplicationServices;
 using Hoshmand.Core.Interfaces.DomainServices;
 using Hoshmand.Core.Interfaces.ExternalServices;
 using Hoshmand.Core.Interfaces.Shared;
+using Hoshmand.Core.Pipeline;
 using Hoshmand.Infrastructure.DomainService;
 using Hoshmand.Infrastructure.ExternalServices;
-using Hoshmand.Infrastructure.Repositories;
 using Hoshmand.Infrastructure.Shared;
 using Hoshmand.Presentation.Validations;
-using System;
 
 namespace Hoshmand.Presentation.ServiceCollections
 {
@@ -24,14 +22,13 @@ namespace Hoshmand.Presentation.ServiceCollections
 
             services.AddTransient<IServiceSettings, ServiceSettings>();
 
-            services.AddTransient<IHoshmandAppService, HoshmandAppService>();
+            services.AddTransient<IPipeline<HoshmandPipelineContext, HoshmandPipelineRequest, HoshmandPipelineResponse>, HoshmandPipelineProcess>();
 
             services.AddTransient<IHttpClientUtility, HttpClientUtility>();
 
             services.AddTransient<IHoshmandClientProxy, HoshmandClientProxy>();
 
             services.AddScoped<IValidator<AuthenticatonRequestModel>, AuthenticationValidation>();
-
 
             return services;
         }
