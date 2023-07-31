@@ -1,7 +1,7 @@
 ﻿using Hoshmand.Core.Interfaces.ExternalServices;
 using Hoshmand.Core.Pipeline;
 
-namespace Hoshmand.Application.ApplicationServices.Hoshmand;
+namespace Hoshmand.Application.ApplicationServices.Pipelines.Hoshmand;
 
 public class HoshmandPipelineProcess : AbstractPipeline<HoshmandPipelineContext, HoshmandPipelineRequest, HoshmandPipelineResponse>
 {
@@ -11,7 +11,7 @@ public class HoshmandPipelineProcess : AbstractPipeline<HoshmandPipelineContext,
 
     public HoshmandPipelineProcess(IHoshmandClientProxy hoshmandServiceProxy)
     {
-        this._hoshmandServiceProxy = hoshmandServiceProxy;
+        _hoshmandServiceProxy = hoshmandServiceProxy;
 
         AddOperation(GetOrderId);
         AddOperation(CheckNumPhone);

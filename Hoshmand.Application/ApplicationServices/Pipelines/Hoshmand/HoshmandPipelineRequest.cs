@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Hoshmand.Application.ApplicationServices.Hoshmand
+namespace Hoshmand.Application.ApplicationServices.Pipelines.Hoshmand
 {
     public class HoshmandPipelineRequest
     {

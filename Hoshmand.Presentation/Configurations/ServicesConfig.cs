@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Hoshmand.Application.ApplicationServices.Hoshmand;
+using Hoshmand.Application.ApplicationServices.Pipelines.Hoshmand;
 using Hoshmand.Core.Dto.Requests;
 using Hoshmand.Core.Interfaces.DomainServices;
 using Hoshmand.Core.Interfaces.ExternalServices;

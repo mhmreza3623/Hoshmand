@@ -1,6 +1,6 @@
 ﻿using Hoshmand.Core.Dto.Response;
 
-namespace Hoshmand.Application.ApplicationServices.Hoshmand
+namespace Hoshmand.Application.ApplicationServices.Pipelines.Hoshmand
 {
     public class HoshmandPipelineResponse
     {
