@@ -23,7 +23,6 @@ public class HoshmandAppService : IHoshmandAppService
     private readonly IGeneralRepository<NumPhoneRequestEntity> _numPhoneRepo;
     private readonly IGeneralRepository<CheckCodeRequestEntity> _checkCodeRepo;
     private readonly IGeneralRepository<IdCardRequestEntity> _idCardRepo;
-    private readonly IValidator<AuthenticatonRequestModel> _validator;
 
     public HoshmandAppService(
         IHoshmandClientProxy hoshmandServiceProxy,
@@ -31,8 +30,7 @@ public class HoshmandAppService : IHoshmandAppService
         IGeneralRepository<OrderRequestEntity> orderRepo,
         IGeneralRepository<NumPhoneRequestEntity> numPhoneRepo,
         IGeneralRepository<CheckCodeRequestEntity> checkCodeRepo,
-        IGeneralRepository<IdCardRequestEntity> idCardRepo,
-        IValidator<AuthenticatonRequestModel> validator
+        IGeneralRepository<IdCardRequestEntity> idCardRepo
         )
     {
         _hoshmandServiceProxy = hoshmandServiceProxy;
@@ -41,7 +39,6 @@ public class HoshmandAppService : IHoshmandAppService
         _numPhoneRepo = numPhoneRepo;
         _checkCodeRepo = checkCodeRepo;
         _idCardRepo = idCardRepo;
-        this._validator = validator;
     }
 
     public async Task<bool> Authentication(AuthenticatonRequestModel requestModel)
