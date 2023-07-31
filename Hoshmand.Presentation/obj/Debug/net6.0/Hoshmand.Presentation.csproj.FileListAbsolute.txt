@@ -184,3 +184,4 @@ F:\Projects\Hoshmand\Hoshmand.Presentation\obj\Debug\net6.0\refint\Hoshmand.Pres
 F:\Projects\Hoshmand\Hoshmand.Presentation\obj\Debug\net6.0\Hoshmand.Presentation.pdb
 F:\Projects\Hoshmand\Hoshmand.Presentation\obj\Debug\net6.0\Hoshmand.Presentation.genruntimeconfig.cache
 F:\Projects\Hoshmand\Hoshmand.Presentation\obj\Debug\net6.0\ref\Hoshmand.Presentation.dll
+F:\Projects\Hoshmand\Hoshmand.Presentation\bin\Debug\net6.0\FluentValidation.dll

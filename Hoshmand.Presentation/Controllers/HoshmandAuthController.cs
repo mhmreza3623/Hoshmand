@@ -16,18 +16,11 @@ public class HoshmandAuthController : ControllerBase
     }
 
     [HttpPost("Auth")]
-    public async Task<IActionResult> AuthenticationByIdCardImages(IFormFile IdCard1, IFormFile IdCard2,string mobile,string nationalCode)
+    public async Task<IActionResult> AuthenticationByIdCardImages(IFormFile imgIdCardFront, IFormFile imgIdCardBehind, IFormFile faceImage, IFormFile liveVideo, string mobile, string nationalCode)
     {
-        var result = await _hoshmandAppService.Authentication(IdCard1, IdCard2, mobile, nationalCode);
+        var result = await _hoshmandAppService.Authentication(imgIdCardFront, imgIdCardBehind, faceImage, liveVideo, mobile, nationalCode);
 
         return Ok(result);
     }
 
-    [HttpPost("idard")]
-    public async Task<IActionResult> IdCard(IFormFile IdCard1, IFormFile IdCard2)
-    {
-        var result = await _hoshmandAppService.IdCard(1,"2", IdCard1, IdCard2);
-
-        return Ok(result);
-    }
 }

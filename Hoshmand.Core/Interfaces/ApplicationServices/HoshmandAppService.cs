@@ -1,11 +1,11 @@
 ﻿using Hoshmand.Core.Dto.Requests;
+using Hoshmand.Core.Dto.Response;
 using Microsoft.AspNetCore.Http;
 
 namespace Hoshmand.Core.Interfaces.ApplicationServices
 {
     public interface IHoshmandAppService
     {
-        Task<string> Authentication(IFormFile idCardLink, IFormFile idCardLink2, string mobile, string nationalCode);
-        Task<IdCardRequestDto> IdCard(int orderRequestId, string orderId, IFormFile idCardLink, IFormFile idCardLink2);
+        Task<bool> Authentication(IFormFile imgIdCardFront, IFormFile imgIdCardBehind, IFormFile faceImage, IFormFile liveVedio, string mobile, string nationalCode);
     }
 }

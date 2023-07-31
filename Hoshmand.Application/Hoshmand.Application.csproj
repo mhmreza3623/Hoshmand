@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Hoshmand.Core\Hoshmand.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="PipeLines\Hoshmand\" />
+  </ItemGroup>
+
 </Project>
